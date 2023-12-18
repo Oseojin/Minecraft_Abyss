@@ -1,0 +1,4 @@
+name: AbyssMainPlugin
+version: '${project.version}'
+main: net.abyss.abyssmainplugin.AbyssMainPlugin
+api-version: '1.20'
