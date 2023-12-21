@@ -5,9 +5,12 @@ import net.abyss.abyssmainplugin.Manager.GateManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -43,9 +46,41 @@ public class GateBase
         TextComponent message = Component.text().color(TextColor.color(255,255,0)).content("몬스터가 몰려옵니다!!").build();
         plugin.getServer().getConsoleSender().sendMessage(message);
 
-        for(int i = 1; i <= waveList.get(0).getIndexNum(0); i++)
+        waveControl();
+    }
+    public void waveControl()
+    {
+        plugin.getServer().getConsoleSender().sendMessage(""+ waveList.size());
+
+        for(int waveCnt = 0; waveCnt < waveList.size(); waveCnt++)
         {
-            world.spawnEntity(centerLoc, waveList.get(0).getIndexType(0));
+            Wave currWave = waveList.get(waveCnt);
+            int delay;
+            if(waveCnt == 0)
+            {
+                delay = 0;
+            }
+            else
+            {
+                delay = waveList.get(waveCnt-1).getDuration();
+            }
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    // wave 안에 몬스터 종류만큼 반복
+                    for (int typeCnt = 0; typeCnt < currWave.getTypeNum(); typeCnt++)
+                    {
+                        // 해당 몬스터 마릿수 만큼 반복
+                        for (int monsterCnt = 0; monsterCnt < currWave.getIndexNum(typeCnt); monsterCnt++)
+                        {
+                            // 소환
+                            world.spawnEntity(centerLoc, currWave.getIndexType(typeCnt));
+                        }
+                    }
+                }
+            }.runTaskLater(plugin, 20 * delay);
         }
     }
     public Location getLocation()

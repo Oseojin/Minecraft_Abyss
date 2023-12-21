@@ -24,8 +24,17 @@ public class ZombieGate extends GateBase
 
         originBlock = world.getBlockAt(loc).getType();
         world.getBlockAt(loc).setType(Material.CRYING_OBSIDIAN);
+
+        // Wave1
         Wave newWave = new Wave();
+        newWave.setDuration(10);
         newWave.addMonster(EntityType.ZOMBIE, 5 * gateLv);
+        waveList.add(newWave);
+
+        // Wave2
+        newWave = new Wave();
+        newWave.setDuration(20);
+        newWave.addMonster(EntityType.ZOMBIE, 10 * gateLv);
         waveList.add(newWave);
 
         TextComponent message = Component.text().color(TextColor.color(255,255,0)).content("좀비 게이트 생성").build();
