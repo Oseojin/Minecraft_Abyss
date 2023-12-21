@@ -2,3 +2,11 @@ name: AbyssMainPlugin
 version: '${project.version}'
 main: net.abyss.abyssmainplugin.AbyssMainPlugin
 api-version: '1.20'
+
+commands:
+  generateGate:
+    description: 게이트 생성
+  destroyGate:
+    description: 게이트 제거
+  checkAllGate:
+    description: 게이트 목록 확인

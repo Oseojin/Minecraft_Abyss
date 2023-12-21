@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Result">
+    <output-path>$PROJECT_DIR$/../Result</output-path>
+    <root id="archive" name="AbyssMainPlugin.jar">
+      <element id="module-output" name="AbyssMainPlugin" />
+    </root>
+  </artifact>
+</component>
