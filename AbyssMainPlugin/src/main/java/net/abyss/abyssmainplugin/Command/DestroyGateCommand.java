@@ -1,6 +1,6 @@
 package net.abyss.abyssmainplugin.Command;
 
-import net.abyss.abyssmainplugin.Gates.GateBase;
+import net.abyss.abyssmainplugin.Gates.Gate;
 import net.abyss.abyssmainplugin.Manager.GateManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -16,8 +16,13 @@ public class DestroyGateCommand implements CommandExecutor
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings)
     {
+        if(strings.length == 0)
+        {
+            commandSender.sendMessage("/destroyGate [삭제할 게이트 인덱스]");
+            return false;
+        }
         int index = Integer.parseInt(strings[0]);
-        GateBase targetGate = GateManager.getInstance().getIndexGate(index);
+        Gate targetGate = GateManager.getInstance().getIndexGate(index);
 
         if(targetGate == null)
         {
@@ -25,16 +30,20 @@ public class DestroyGateCommand implements CommandExecutor
             commandSender.sendMessage(message);
         }
 
-        Vector gateVec = targetGate.getLocation().toVector();
-        int lv = targetGate.getGateLv();
-
-        double x = gateVec.getX();
-        double y = gateVec.getY();
-        double z = gateVec.getZ();
+        Vector gateMainVec = targetGate.getGateMainLoc().toVector();
+        Vector gateDimensionVec = targetGate.getGateDimensionLoc().toVector();
+        int lv = targetGate.getGateLevel();
 
         GateManager.getInstance().destroyGate(index);
-        TextComponent message = Component.text().color(TextColor.color(0,255,0)).content("("+ x + ", " + y + ", " + z + ") 위치에 " + lv + " 레벨 게이트를 제거했습니다.").build();
-        commandSender.sendMessage(message);
+
+        TextComponent funcMessage = Component.text().color(TextColor.color(255, 0, 0)).content("게이트 제거").build();
+        commandSender.sendMessage(funcMessage);
+
+        TextComponent nameMessage = Component.text().color(TextColor.color(255, 249, 30)).content("게이트 이름: " + targetGate.getGateName()).build();
+        commandSender.sendMessage(nameMessage);
+
+        TextComponent detailMessage = Component.text().color(TextColor.color(0,255,0)).content("메인 위치: " + gateMainVec.getX() + " " + gateMainVec.getY() + " " + gateMainVec.getZ() + " / 차원 위치: " + gateDimensionVec.getX() + " " + gateDimensionVec.getY() + " " + gateDimensionVec.getZ() + " / 레벨: " + lv).build();
+        commandSender.sendMessage(detailMessage);
 
         return false;
     }

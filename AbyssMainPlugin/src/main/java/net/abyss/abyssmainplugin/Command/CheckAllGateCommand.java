@@ -1,11 +1,10 @@
 package net.abyss.abyssmainplugin.Command;
 
-import net.abyss.abyssmainplugin.Gates.GateBase;
+import net.abyss.abyssmainplugin.Gates.Gate;
 import net.abyss.abyssmainplugin.Manager.GateManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,18 +18,28 @@ public class CheckAllGateCommand implements CommandExecutor
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings)
     {
-        List<GateBase> gateList = GateManager.getInstance().getGateList();
+        List<Gate> gateList = GateManager.getInstance().getGateList();
 
-        TextComponent total = Component.text().color(TextColor.color(0,255,0)).content("totalNum: " + gateList.size()).build();
-        commandSender.sendMessage(total);
+        commandSender.sendMessage(Component.text().color(TextColor.color(141, 139, 140)).content("============게이트 총 개수 : " + gateList.size() + "============").build());
 
         for(int i = 0; i < gateList.size(); i++)
         {
-            Vector gateVec = gateList.get(i).getLocation().toVector();
-            int lv = gateList.get(i).getGateLv();
-            TextComponent message = Component.text().color(TextColor.color(0,255,0)).content("pos: " + gateVec.getX() + ", " + gateVec.getY() + ", " + gateVec.getZ() + "/ lv: " + lv + "/ type: " + gateList.get(i).getType()).build();
-            commandSender.sendMessage(message);
+            Gate targetGate = gateList.get(i);
+            Vector gateMainVec = targetGate.getGateMainLoc().toVector();
+            Vector gateDimensionVec = targetGate.getGateDimensionLoc().toVector();
+            int lv = targetGate.getGateLevel();
+
+            TextComponent funcMessage = Component.text().color(TextColor.color(255, 0, 0)).content("게이트 인덱스: " + (i)).build();
+            commandSender.sendMessage(funcMessage);
+
+            TextComponent nameMessage = Component.text().color(TextColor.color(255, 249, 30)).content("게이트 이름: " + targetGate.getGateName()).build();
+            commandSender.sendMessage(nameMessage);
+
+            TextComponent detailMessage = Component.text().color(TextColor.color(0,255,0)).content("메인 위치: " + gateMainVec.getX() + " " + gateMainVec.getY() + " " + gateMainVec.getZ() + " / 차원 위치: " + gateDimensionVec.getX() + " " + gateDimensionVec.getY() + " " + gateDimensionVec.getZ() + " / 레벨: " + lv).build();
+            commandSender.sendMessage(detailMessage);
         }
+
+        commandSender.sendMessage(Component.text().color(TextColor.color(141, 139, 140)).content("====================================").build());
 
         return false;
     }

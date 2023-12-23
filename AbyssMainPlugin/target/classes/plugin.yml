@@ -10,3 +10,5 @@ commands:
     description: 게이트 제거
   checkAllGate:
     description: 게이트 목록 확인
+  openZombieGate:
+    description: 좀비 게이트 시작

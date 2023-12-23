@@ -1,6 +1,5 @@
 package net.abyss.abyssmainplugin.Event;
 
-import net.abyss.abyssmainplugin.AbyssMainPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
@@ -12,12 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class OnPlayerConnect implements Listener
 {
-    public static AbyssMainPlugin plugin;
-    public static void setPlugin(AbyssMainPlugin MainPlugin)
-    {
-        plugin = MainPlugin;
-    }
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {

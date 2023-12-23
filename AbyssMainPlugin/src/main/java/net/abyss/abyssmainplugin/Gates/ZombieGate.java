@@ -1,45 +1,26 @@
 package net.abyss.abyssmainplugin.Gates;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
+import net.abyss.abyssmainplugin.Manager.GateManager;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Zombie;
 import org.bukkit.util.Vector;
 
-public class ZombieGate extends GateBase
+public class ZombieGate extends Gate
 {
     @Override
-    public void initGate(Vector vec, Integer lv, Integer type)
+    public void Init(String _gateName, Location _gateMainLoc, Location _gateDimensionLoc, Integer _gateLv, Integer _maxNum)
     {
-        Location loc = new Location(world, vec.getX(), vec.getY(), vec.getZ());
-        centerLoc = loc;
+        gateName = _gateName;
+        gateMainLoc = _gateMainLoc;
+        gateDimensionLoc = _gateDimensionLoc;
+        gateSize = 5;
+        gateLv = _gateLv;
+        maxMonsterNum = _maxNum;
+        scheduler = GateManager.getInstance().getPlugin().getServer().getScheduler();
 
-        gateLv = lv;
-
-        gateType = GATE_TYPE.values()[type];
-
-        originBlock = world.getBlockAt(loc).getType();
-        world.getBlockAt(loc).setType(Material.CRYING_OBSIDIAN);
-
-        // Wave1
-        Wave newWave = new Wave();
-        newWave.setDuration(10);
-        newWave.addMonster(EntityType.ZOMBIE, 5 * gateLv);
-        waveList.add(newWave);
-
-        // Wave2
-        newWave = new Wave();
-        newWave.setDuration(20);
-        newWave.addMonster(EntityType.ZOMBIE, 10 * gateLv);
-        waveList.add(newWave);
-
-        TextComponent message = Component.text().color(TextColor.color(255,255,0)).content("좀비 게이트 생성").build();
-        plugin.getServer().getConsoleSender().sendMessage(message);
-
-        startWave();
+        addSpawnLoc("SkeletalKnight", new Vector(8, 0, 10));
+        addSpawnLoc("SkeletalKnight", new Vector(9, 0, -14));
+        addSpawnLoc("SkeletalKnight", new Vector(23, 0, 5));
+        addSpawnLoc("SkeletalKnight", new Vector(26, 0, -7));
+        addBoss("SkeletonKing", new Vector(25, 0, 0));
     }
 }
