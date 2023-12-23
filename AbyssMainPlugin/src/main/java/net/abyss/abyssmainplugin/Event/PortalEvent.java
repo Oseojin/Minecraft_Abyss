@@ -77,6 +77,11 @@ public class PortalEvent implements Listener
             }
         }
 
+        if(targetGate == null)
+        {
+            return;
+        }
+
         double x;
         double y;
         double z;
