@@ -12,3 +12,7 @@ commands:
     description: 게이트 목록 확인
   openZombieGate:
     description: 좀비 게이트 시작
+  statOpen:
+    description: 스텟창 열기
+  setStat:
+    description: 스텟 설정(테스트용)

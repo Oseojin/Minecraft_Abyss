@@ -2,9 +2,12 @@ package net.abyss.abyssmainplugin.Manager;
 
 import io.lumine.mythic.core.mobs.ActiveMob;
 import net.abyss.abyssmainplugin.AbyssMainPlugin;
-import net.abyss.abyssmainplugin.Monsters.BossMonster;
 import net.abyss.abyssmainplugin.Monsters.Monster;
+import net.abyss.abyssmainplugin.Monsters.MonsterTypeSkeleton;
+import net.abyss.abyssmainplugin.Monsters.MonsterTypeWitherSkeleton;
+import net.abyss.abyssmainplugin.Monsters.MonsterTypeZombie;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
 
@@ -36,10 +39,25 @@ public class MonsterManager
 
 
 
-    private HashMap<ActiveMob, Monster> monsterHashMap = new HashMap<>();
-    private HashMap<Entity, Monster> monsterEntityHashMap = new HashMap<>();
-    private HashMap<ActiveMob, BossMonster> bossHashMap = new HashMap<>();
-    private HashMap<Entity, BossMonster> bossEntityHashMap = new HashMap<>();
+    private final HashMap<ActiveMob, Monster> monsterHashMap = new HashMap<>();
+    private final HashMap<Entity, Monster> monsterEntityHashMap = new HashMap<>();
+    private final HashMap<ActiveMob, Monster> bossHashMap = new HashMap<>();
+    private final HashMap<Entity, Monster> bossEntityHashMap = new HashMap<>();
+
+    public Monster findMonsterType(EntityType type)
+    {
+        switch(type)
+        {
+            case ZOMBIE:
+                return new MonsterTypeZombie();
+            case SKELETON:
+                return new MonsterTypeSkeleton();
+            case WITHER_SKELETON:
+                return new MonsterTypeWitherSkeleton();
+            default:
+                return null;
+        }
+    }
     public void addMonster(ActiveMob _mob, Monster _monster)
     {
         monsterHashMap.put(_mob, _monster);
@@ -61,12 +79,12 @@ public class MonsterManager
         }
         return monsterEntityHashMap.get(_mob);
     }
-    public void addBoss(ActiveMob _mob, BossMonster _bossMonster)
+    public void addBoss(ActiveMob _mob, Monster _bossMonster)
     {
         bossHashMap.put(_mob, _bossMonster);
         bossEntityHashMap.put(_mob.getEntity().getBukkitEntity(), _bossMonster);
     }
-    public BossMonster getBoss(ActiveMob _mob)
+    public Monster getBoss(ActiveMob _mob)
     {
         if(!bossHashMap.containsKey(_mob))
         {
@@ -74,7 +92,7 @@ public class MonsterManager
         }
         return bossHashMap.get(_mob);
     }
-    public BossMonster getBossByEntity(Entity _mob)
+    public Monster getBossByEntity(Entity _mob)
     {
         if(!bossEntityHashMap.containsKey(_mob))
         {
@@ -82,19 +100,15 @@ public class MonsterManager
         }
         return bossEntityHashMap.get(_mob);
     }
-    public ActiveMob monsterDead(ActiveMob _mob)
+    public void monsterDead(ActiveMob _mob)
     {
         if(monsterHashMap.containsKey(_mob))
         {
             monsterHashMap.get(_mob).Dead();
-            return _mob;
         }
         else if(bossHashMap.containsKey(_mob))
         {
             bossHashMap.get(_mob).Dead();
-            return _mob;
         }
-
-        return null;
     }
 }

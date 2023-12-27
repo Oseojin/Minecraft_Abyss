@@ -1,16 +1,17 @@
 package net.abyss.abyssmainplugin.Event;
 
-import io.lumine.mythic.api.adapters.AbstractLocation;
 import net.abyss.abyssmainplugin.Gates.Gate;
 import net.abyss.abyssmainplugin.Manager.GateManager;
 import net.abyss.abyssmainplugin.Manager.MonsterManager;
-import net.abyss.abyssmainplugin.Monsters.BossMonster;
-import net.abyss.abyssmainplugin.Monsters.Monster;
+import net.abyss.abyssmainplugin.Manager.TitleManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 
@@ -28,26 +29,6 @@ public class PortalEvent implements Listener
         else if(MonsterManager.getInstance().getMonsterByEntity(event.getEntity()) != null)
         {
             event.setCancelled(true);
-        }
-    }
-    @EventHandler
-    public void mobPortal(EntityPortalEnterEvent event)
-    {
-        Monster targetMonster = MonsterManager.getInstance().getMonsterByEntity(event.getEntity());
-        if(targetMonster == null)
-        {
-            return;
-        }
-
-        Gate parentGate = targetMonster.getParentGate();
-
-        if(event.getLocation().distance(parentGate.getGateDimensionLoc()) < event.getLocation().distance(parentGate.getGateMainLoc()))
-        {
-            double x = parentGate.getGateMainLoc().getX();
-            double y = parentGate.getGateMainLoc().getY();
-            double z = parentGate.getGateMainLoc().getZ();
-            AbstractLocation targetLoc = new AbstractLocation(targetMonster.getMob().getEntity().getWorld(), x, y, z);
-            targetMonster.getMob().getEntity().teleport(targetLoc);
         }
     }
 
@@ -92,12 +73,20 @@ public class PortalEvent implements Listener
             x = targetGate.getGateDimensionLoc().getX();
             y = targetGate.getGateDimensionLoc().getY();
             z = targetGate.getGateDimensionLoc().getZ();
+
+            targetGate.playerEnterGate(player);
+
+            TextComponent titleMessage = Component.text().color(TextColor.color(35, 255, 19)).content("게이트 입장").build();
+            TextComponent subTitleMessage = (TextComponent) targetGate.getGateName();
+            TitleManager.getInstance().printTitleToPlayer(titleMessage, subTitleMessage, player);
         }
         else
         {
             x = targetGate.getGateMainLoc().getX();
             y = targetGate.getGateMainLoc().getY();
             z = targetGate.getGateMainLoc().getZ();
+
+            targetGate.playerExitGate(player);
         }
 
         Location targetLoc = new Location(player.getWorld(), x, y, z);

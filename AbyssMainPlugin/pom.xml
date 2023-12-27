@@ -63,6 +63,10 @@
             <name>Lumine Releases</name>
             <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>jitpack-repo</id>
+            <url>https://jitpack.io</url>
+        </repository>
 
     </repositories>
 
@@ -79,6 +83,11 @@
             <version>5.5.1</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.LoneDev6</groupId>
+            <artifactId>api-itemsadder</artifactId>
+            <version>3.6.2-beta-r3-b</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

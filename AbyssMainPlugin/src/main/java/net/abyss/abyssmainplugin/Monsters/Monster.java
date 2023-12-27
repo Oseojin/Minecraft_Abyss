@@ -3,16 +3,18 @@ package net.abyss.abyssmainplugin.Monsters;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import net.abyss.abyssmainplugin.AbyssMainPlugin;
 import net.abyss.abyssmainplugin.Gates.Gate;
+import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
-public class Monster
+public abstract class Monster
 {
-    private  AbyssMainPlugin plugin;
-    private Gate parentGate;
-    private ActiveMob mob;
-    private BukkitScheduler scheduler;
-    private BukkitTask task;
+    protected AbyssMainPlugin plugin;
+    protected Gate parentGate = null;
+    protected ActiveMob mob;
+    protected BukkitScheduler scheduler;
+    protected BukkitTask task;
+    protected boolean isOverloaded = false;
 
     public void Spawn(AbyssMainPlugin _plugin, Gate _gate, ActiveMob _newMob)
     {
@@ -20,26 +22,10 @@ public class Monster
         parentGate = _gate;
         mob = _newMob;
         scheduler = plugin.getServer().getScheduler();
-
-        behaviorController();
     }
 
-    public void behaviorController()
-    {
-        task = scheduler.runTaskLater(plugin, () ->
-        {
-            // Mythic Mob에서 Pathfinder 타입 검사하고 플레이어 따라가는 중 아니면 변경
+    public abstract void Overload();
 
-            /*Bukkit.getMobGoals().removeAllGoals(entity);
-            Location loc = new Location(entity.getWorld(), defenceCenterLoc.getX(), defenceCenterLoc.getY(), defenceCenterLoc.getZ());
-            entity.getPathfinder().moveTo(loc, moveSpeed);
-            Pathfinder.PathResult pathResult = entity.getPathfinder().getCurrentPath();
-            if(pathResult != null)
-            {
-                //plugin.getServer().getConsoleSender().sendMessage(pathResult.getFinalPoint() + "");
-            }*/
-        }, 5L);
-    }
     public ActiveMob getMob()
     {
         return mob;
@@ -48,10 +34,17 @@ public class Monster
     {
         return parentGate;
     }
+    public boolean getOverloaded()
+    {
+        return isOverloaded;
+    }
 
     public void Dead()
     {
-        task.cancel();
+        if(parentGate == null)
+        {
+            return;
+        }
         parentGate.monsterDead(mob);
     }
 }
