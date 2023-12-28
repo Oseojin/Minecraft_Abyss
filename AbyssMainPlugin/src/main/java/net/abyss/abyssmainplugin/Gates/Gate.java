@@ -45,7 +45,7 @@ public abstract class Gate
     protected BukkitTask overloadTask;
     // 플레이어 별 기여도 만들어야 함 나중에!!
 
-    public abstract void Init(Location _gateInLoc);
+    public abstract void Init(Location _mainLoc);
     public void buildPortal()
     {
         onGate = true;
@@ -135,6 +135,7 @@ public abstract class Gate
 
     public void initialSpawn()
     {
+        currMonsterNum = 0;
         for(String monsterType : monsterMap.keySet())
         {
             if(currMonsterNum >= maxMonsterNum)
@@ -222,6 +223,7 @@ public abstract class Gate
     {
         if(mob.equals(bossMob) && !isOverload)
         {
+            Bukkit.getConsoleSender().sendMessage("보스잡음");
             clearGate();
         }
         else if(mobList.contains(mob) && !isOverload)
@@ -241,6 +243,7 @@ public abstract class Gate
         // 기여도에 따라 보상
         spawnTask.cancel();
         overloadTask.cancel();
+        GateManager.getInstance().clearGate();
         GameManager.getInstance().changeWorldLevel();
         outAllPlayer();
         closePortal();
@@ -273,6 +276,11 @@ public abstract class Gate
     public void playerExitGate(Player player)
     {
         gateInPlayerList.remove(player);
+    }
+
+    public boolean getOnGate()
+    {
+        return onGate;
     }
 
     public Component getGateName()

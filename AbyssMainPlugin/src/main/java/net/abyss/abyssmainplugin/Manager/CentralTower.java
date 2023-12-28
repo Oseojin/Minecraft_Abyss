@@ -34,7 +34,7 @@ public class CentralTower
     private double maxHP;
     private double currHP;
     private int towerLevel;
-    private final Location centerLoc = new Location(plugin.getServer().getWorld("world"), -701, 69, -22);
+    private final Location centerLoc = new Location(plugin.getServer().getWorld("world"), 0, -60, 0);
 
     public void Init()
     {

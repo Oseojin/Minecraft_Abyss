@@ -18,7 +18,7 @@ public class WitherSkeletonGate extends Gate
     {
         gateMainLoc = _gateMainLoc;
 
-        gateDimensionLoc = new Location(Bukkit.getWorld("world"), -681, 69, -21);
+        gateDimensionLoc = new Location(Bukkit.getWorld("world"), -681, -60, -21);
         gateLv = GameManager.getInstance().getWorldLevel();
         isOverload = false;
         gateSize = 4;
@@ -27,7 +27,7 @@ public class WitherSkeletonGate extends Gate
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
 
-        int randomNum = random.nextInt(GameManager.getInstance().getWorldLevel());
+        int randomNum = random.nextInt((GameManager.getInstance().getWorldLevel() + 1));
 
         maxMonsterNum = PlayerManager.getInstance().getPlayerNum() * 5 + randomNum;
         spawnDelay= 60L;

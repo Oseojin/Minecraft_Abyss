@@ -4,6 +4,7 @@ import net.abyss.abyssmainplugin.Manager.PlayerManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +21,8 @@ public class OnPlayerConnect implements Listener
         TextComponent message = Component.text().color(TextColor.color(0,255,0)).content(playerName + "님이 접속하셨습니다.").build();
         event.joinMessage(message);
         PlayerManager.getInstance().addPlayer(player);
+        PlayerManager.getInstance().getPlayerData(player).setIsLobby(true);
+        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
     }
 
     @EventHandler

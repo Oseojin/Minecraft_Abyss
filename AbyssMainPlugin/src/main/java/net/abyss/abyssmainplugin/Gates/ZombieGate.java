@@ -1,6 +1,5 @@
 package net.abyss.abyssmainplugin.Gates;
 
-import net.abyss.abyssmainplugin.Manager.CentralTower;
 import net.abyss.abyssmainplugin.Manager.GameManager;
 import net.abyss.abyssmainplugin.Manager.GateManager;
 import net.abyss.abyssmainplugin.Manager.PlayerManager;
@@ -19,7 +18,7 @@ public class ZombieGate extends Gate
     {
         gateMainLoc = _gateMainLoc;
 
-        gateDimensionLoc = new Location(Bukkit.getWorld("world"), -531, 65, -40);
+        gateDimensionLoc = new Location(Bukkit.getWorld("world"), -531, -60, -40);
         gateLv = GameManager.getInstance().getWorldLevel();
         isOverload = false;
         gateSize = 2;
@@ -28,7 +27,7 @@ public class ZombieGate extends Gate
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
 
-        int randomNum = random.nextInt(GameManager.getInstance().getWorldLevel());
+        int randomNum = random.nextInt((GameManager.getInstance().getWorldLevel() + 1));
 
         maxMonsterNum = PlayerManager.getInstance().getPlayerNum() * 5 + randomNum;
         spawnDelay= 60L;

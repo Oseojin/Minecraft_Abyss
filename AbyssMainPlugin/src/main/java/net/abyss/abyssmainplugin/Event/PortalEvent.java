@@ -44,6 +44,10 @@ public class PortalEvent implements Listener
         boolean isGo = true;
         for(Gate gate : gateList)
         {
+            if(!gate.getOnGate())
+            {
+                continue;
+            }
             if(minDistance > gate.getGateMainLoc().distance(player.getLocation()))
             {
                 minDistance = gate.getGateMainLoc().distance(player.getLocation());

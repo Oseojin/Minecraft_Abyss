@@ -31,24 +31,43 @@ public class CharacterStatInvClickEvent implements Listener
                 event.setCancelled(true);
                 return;
             }
-            Bukkit.getConsoleSender().sendMessage(stack + "");
             if(event.getClickedInventory().equals(player.getInventory()))
             {
                 switch (stack.getNamespace())
                 {
                     case "custom_weapon":
+                        if(playerData.getWeapon() != null)
+                        {
+                            playerData.takeOfWeapon();
+                        }
                         playerData.equipWeapon(stack);
                         break;
                     case "custom_helmet":
+                        if(playerData.getHelmet() != null)
+                        {
+                            playerData.takeOfHelmet();
+                        }
                         playerData.equipHelmet(stack);
                         break;
                     case "custom_chest":
+                        if(playerData.getChest() != null)
+                        {
+                            playerData.takeOfChest();
+                        }
                         playerData.equipChest(stack);
                         break;
                     case "custom_leggings":
+                        if(playerData.getLeggings() != null)
+                        {
+                            playerData.takeOfLeggings();
+                        }
                         playerData.equipLeggings(stack);
                         break;
                     case "custom_boots":
+                        if(playerData.getBoots() != null)
+                        {
+                            playerData.takeOfBoots();
+                        }
                         playerData.equipBoots(stack);
                         break;
                     default:
@@ -57,6 +76,11 @@ public class CharacterStatInvClickEvent implements Listener
             }
             else
             {
+                if(player.getInventory().firstEmpty() == -1)
+                {
+                    player.sendMessage("인벤토리가 가득 차 장비를 해제할 수 없습니다.");
+                    return;
+                }
                 switch (event.getSlot())
                 {
                     case 22:

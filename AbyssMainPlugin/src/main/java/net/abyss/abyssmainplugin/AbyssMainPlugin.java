@@ -1,6 +1,7 @@
 package net.abyss.abyssmainplugin;
 
 import net.abyss.abyssmainplugin.Command.*;
+import net.abyss.abyssmainplugin.Db.db_connect;
 import net.abyss.abyssmainplugin.Event.*;
 import net.abyss.abyssmainplugin.Event.PlayerInvEvent;
 import net.abyss.abyssmainplugin.Manager.*;
@@ -15,7 +16,9 @@ public final class AbyssMainPlugin extends JavaPlugin
         eventRegister();
         commandRegister();
 
+        db_connect.setPlugin(this);
         GameManager.setPlugin(this);
+        GameManager.getInstance().Init();
         CentralTower.setPlugin(this);
         GateManager.setPlugin(this);
         MonsterManager.setPlugin(this);

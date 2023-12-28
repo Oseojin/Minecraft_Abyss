@@ -17,6 +17,8 @@ import java.util.Random;
 
 public class EntityDamageEvent implements Listener
 {
+    private final double intuitionValue = 0.2;
+    private final int criticalValue = 5;
     @EventHandler
     public void PlayerPreAttack(PrePlayerAttackEntityEvent event)
     {
@@ -57,11 +59,9 @@ public class EntityDamageEvent implements Listener
             Random random = new Random();
             random.setSeed(System.currentTimeMillis());
             int randNum = random.nextInt(100) + 1;
-            player.sendMessage("회피 랜덤: " + randNum + " / 현재 회피 확률: " + (playerData.getStatIntuition() * 0.2) + "%");
-            if(randNum <= playerData.getStatIntuition() * 0.2)
+            if(randNum <= playerData.getStatIntuition() * intuitionValue)
             {
                 event.setDamage(0);
-                player.sendMessage("회피!");
             }
 
             event.setDamage(realDamage);
@@ -80,11 +80,9 @@ public class EntityDamageEvent implements Listener
             Random random = new Random();
             random.setSeed(System.currentTimeMillis());
             int randNum = random.nextInt(100) + 1;
-            player.sendMessage("크리티컬 랜덤: " + randNum + " / 현재 치명타 확률: " + (playerData.getStatLuck() * 5) + "%");
-            if(randNum <= playerData.getStatLuck() * 5)
+            if(randNum <= playerData.getStatLuck() * criticalValue)
             {
                 event.setDamage(event.getDamage() * 2);
-                player.sendMessage("크리티컬!");
             }
 
             LivingEntity entity = (LivingEntity) event.getEntity();
@@ -101,12 +99,16 @@ public class EntityDamageEvent implements Listener
         int cnt;
         boolean isMax = false;
 
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        int randNum = random.nextInt(125) + 1;
+
         if(rapidStat == 100)
         {
             cnt = 2;
             isMax = true;
         }
-        else if(rapidStat > 20)
+        else if(rapidStat > 0)
         {
             cnt = 1;
         }
@@ -115,13 +117,7 @@ public class EntityDamageEvent implements Listener
             return;
         }
 
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-        int randNum = random.nextInt(125) + 1;
-
-        player.sendMessage("연속타격 랜덤: " + randNum + " / 현재 연속타격 확률: " + rapidStat + "%");
-
-        if(randNum > (rapidStat-20))
+        if(randNum > rapidStat)
         {
             return;
         }
@@ -136,7 +132,6 @@ public class EntityDamageEvent implements Listener
                     if(PlayerManager.getInstance().getMaxStatRapid() == PlayerManager.getInstance().getPlayerData(player).getStatRapid())
                     {
                         int luckrandom = random.nextInt(100) + 1;
-                        player.sendMessage("크리티컬 랜덤: " + randNum + " / 현재 치명타 확률: " + (PlayerManager.getInstance().getPlayerData(player).getStatLuck() * 5) + "%");
                         if(luckrandom <= PlayerManager.getInstance().getPlayerData(player).getStatLuck() * 5)
                         {
                             entity.damage(damage * 2);

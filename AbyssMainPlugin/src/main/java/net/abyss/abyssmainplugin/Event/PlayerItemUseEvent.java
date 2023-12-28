@@ -32,6 +32,7 @@ public class PlayerItemUseEvent implements Listener
                     {
                         player.sendMessage("체력 스텟이 최대치에 도달했습니다.");
                         event.setCancelled(true);
+                        return;
                     }
                     playerData.addStatHealth(1);
                     break;
@@ -40,6 +41,7 @@ public class PlayerItemUseEvent implements Listener
                     {
                         player.sendMessage("힘 스텟이 최대치에 도달했습니다.");
                         event.setCancelled(true);
+                        return;
                     }
                     playerData.addStatStrength(1);
                     break;
@@ -48,6 +50,7 @@ public class PlayerItemUseEvent implements Listener
                     {
                         player.sendMessage("신속 스텟이 최대치에 도달했습니다.");
                         event.setCancelled(true);
+                        return;
                     }
                     playerData.addStatRapid(1);
                     break;
@@ -56,6 +59,7 @@ public class PlayerItemUseEvent implements Listener
                     {
                         player.sendMessage("가속 스텟이 최대치에 도달했습니다.");
                         event.setCancelled(true);
+                        return;
                     }
                     playerData.addStatAccel(1);
                     break;
@@ -64,6 +68,7 @@ public class PlayerItemUseEvent implements Listener
                     {
                         player.sendMessage("직감 스텟이 최대치에 도달했습니다.");
                         event.setCancelled(true);
+                        return;
                     }
                     playerData.addStatIntuition(1);
                     break;
@@ -72,6 +77,7 @@ public class PlayerItemUseEvent implements Listener
                     {
                         player.sendMessage("행운 스텟이 최대치에 도달했습니다.");
                         event.setCancelled(true);
+                        return;
                     }
                     playerData.addStatLuck(1);
                     break;

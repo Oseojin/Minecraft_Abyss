@@ -3,6 +3,7 @@ package net.abyss.abyssmainplugin.Monsters;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import net.abyss.abyssmainplugin.AbyssMainPlugin;
 import net.abyss.abyssmainplugin.Gates.Gate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -45,6 +46,7 @@ public abstract class Monster
         {
             return;
         }
+        Bukkit.getConsoleSender().sendMessage("몹 사망 몬스터");
         parentGate.monsterDead(mob);
     }
 }

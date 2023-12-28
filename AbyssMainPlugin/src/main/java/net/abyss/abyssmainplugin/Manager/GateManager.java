@@ -4,11 +4,7 @@ import net.abyss.abyssmainplugin.AbyssMainPlugin;
 import net.abyss.abyssmainplugin.Gates.Gate;
 import net.abyss.abyssmainplugin.Gates.WitherSkeletonGate;
 import net.abyss.abyssmainplugin.Gates.ZombieGate;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -42,16 +38,19 @@ public class GateManager
 
 
     private final List<Gate> gateList = new ArrayList<>();
+    private static int gateNum = 0;
 
     public void Init()
     {
         gateList.add(new ZombieGate());
         gateList.add(new WitherSkeletonGate());
+        gateNum = 0;
     }
 
     public void generateGate(int _gate, Vector _mainVec)
     {
         Location mainLoc = new Location(plugin.getServer().getWorld("world"), _mainVec.getX(), _mainVec.getY(), _mainVec.getZ());
+        gateNum++;
         gateList.get(_gate).Init(mainLoc);
         gateList.get(_gate).initialSpawn();
         gateList.get(_gate).spawnBoss();
@@ -61,15 +60,20 @@ public class GateManager
     {
         gateList.get(_index).destroyGate();
     }
-    public void clearGate(Gate _gate)
+    public void clearGate()
     {
-
+        gateNum--;
     }
     public void deleteGate(Gate _gate)
     {
         gateList.remove(_gate);
+        gateNum--;
     }
 
+    public int getGateNum()
+    {
+        return gateNum;
+    }
     public Gate getIndexGate(Integer index)
     {
         return gateList.get(index);

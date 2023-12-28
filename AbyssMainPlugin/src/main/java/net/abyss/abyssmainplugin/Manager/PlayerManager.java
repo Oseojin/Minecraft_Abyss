@@ -1,7 +1,10 @@
 package net.abyss.abyssmainplugin.Manager;
 
 import net.abyss.abyssmainplugin.AbyssMainPlugin;
+import net.abyss.abyssmainplugin.Db.db_connect;
 import net.abyss.abyssmainplugin.PlayerData;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -44,29 +47,70 @@ public class PlayerManager
     {
         PlayerData playerData = new PlayerData();
         playerData.initData(_player);
-
         playerDataHashMap.put(_player, playerData);
-    }
-    public void removePlayer(Player _player)
-    {
-        playerDataHashMap.remove(_player);
-    }
-    public void resetGame()
-    {
-        for(Player player : playerDataHashMap.keySet())
+
+        if(db_connect.getInstance().insertMember(_player) == 0)
         {
-            playerDataHashMap.get(player).initData(player);
+            db_connect.getInstance().db_PlayerInfo(_player);
+
+            playerData.loadPlayerEquipment();
+            playerData.calcTotalStat();
+        }
+        else
+        {
+            _player.kick(Component.text().content("데이터베이스에서 정보를 로드중 오류가 발생 했습니다. " + db_connect.getInstance().insertMember(_player)).build());
         }
     }
+
+    public void checkGameCodePlayer(Player player)
+    {
+        PlayerData playerData = playerDataHashMap.get(player);
+        Bukkit.getConsoleSender().sendMessage(GameManager.getInstance().getGameCode());
+        if(!playerData.getCode().equalsIgnoreCase(GameManager.getInstance().getGameCode()))
+        {
+            db_connect.getInstance().SetCode(player, GameManager.getInstance().getGameCode());
+            db_connect.getInstance().SetStat(player, "health", 0);
+            db_connect.getInstance().SetStat(player, "strength", 0);
+            db_connect.getInstance().SetStat(player, "rapid", 0);
+            db_connect.getInstance().SetStat(player, "accel", 0);
+            db_connect.getInstance().SetStat(player, "intuition", 0);
+            db_connect.getInstance().SetStat(player, "luck", 0);
+            player.getInventory().clear();
+            db_connect.getInstance().db_PlayerInfo(player);
+
+            playerData.loadPlayerEquipment();
+            playerData.calcTotalStat();
+        }
+    }
+
+    public void removePlayer(Player _player)
+    {
+        playerDataHashMap.get(_player).takeOfPlayerEquipment();
+        playerDataHashMap.remove(_player);
+    }
+
     public int getPlayerNum()
     {
-        return playerDataHashMap.size();
+        int size = 0;
+        for(Player player : playerDataHashMap.keySet())
+        {
+            if(playerDataHashMap.get(player).getIsLobby())
+            {
+                continue;
+            }
+            size++;
+        }
+        return size;
     }
     public int getAllPlayerStatSum()
     {
         int sum = 0;
         for(Player player : playerDataHashMap.keySet())
         {
+            if(playerDataHashMap.get(player).getIsLobby())
+            {
+                continue;
+            }
             sum += playerDataHashMap.get(player).getTotalStat();
         }
 
