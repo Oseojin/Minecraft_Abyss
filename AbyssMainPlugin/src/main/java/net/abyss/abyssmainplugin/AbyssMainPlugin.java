@@ -44,6 +44,7 @@ public final class AbyssMainPlugin extends JavaPlugin
         Bukkit.getPluginManager().registerEvents(new CharacterStatInvClickEvent(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInvEvent(), this);
         Bukkit.getPluginManager().registerEvents(new GameStartEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeath(), this);
     }
 
     private void commandRegister()
@@ -54,5 +55,6 @@ public final class AbyssMainPlugin extends JavaPlugin
         getCommand("openZombieGate").setExecutor(new ZombieGateOpenCommand());
         getCommand("statOpen").setExecutor(new StatOpenCommand());
         getCommand("setStat").setExecutor(new setStatCommand());
+        getCommand("getPos").setExecutor(new getRelativePosCommand());
     }
 }

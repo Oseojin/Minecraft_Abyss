@@ -40,8 +40,8 @@ public class GameManager
 
     private BukkitTask mainTask;
 
-    private static Location startLoc = new Location(Bukkit.getServer().getWorld("world"), 250, -60, 250);
-    private static Location endLoc = new Location(Bukkit.getServer().getWorld("world"), -250, -60, -250);
+    private static Location startLoc = new Location(Bukkit.getServer().getWorld("world"), 100, -60, 100);
+    private static Location endLoc = new Location(Bukkit.getServer().getWorld("world"), -100, -60, -100);
 
     private static int worldLevel = 1;
     private boolean hardWorld = false;
@@ -126,8 +126,7 @@ public class GameManager
             {
                 GateSet();
             }
-
-        }, 20 * 60 * 1, 20 * 60 * 20 / worldLevel);
+        }, 20 * 60 * 1, (long)(20 * 60 * 10 / ((worldLevel + 1) / 520.0)));
     }
 
     public void GateSet()
@@ -149,7 +148,7 @@ public class GameManager
 
         Vector mainVec = new Vector(x, y, z);
 
-        GateManager.getInstance().generateGate(1, mainVec);
+        GateManager.getInstance().generateGate(gateCase, mainVec);
     }
 
     public void setGameCode()

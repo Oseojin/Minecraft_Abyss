@@ -2,7 +2,7 @@ package net.abyss.abyssmainplugin.Manager;
 
 import net.abyss.abyssmainplugin.AbyssMainPlugin;
 import net.abyss.abyssmainplugin.Gates.Gate;
-import net.abyss.abyssmainplugin.Gates.WitherSkeletonGate;
+import net.abyss.abyssmainplugin.Gates.SkeletonGate;
 import net.abyss.abyssmainplugin.Gates.ZombieGate;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -43,7 +43,7 @@ public class GateManager
     public void Init()
     {
         gateList.add(new ZombieGate());
-        gateList.add(new WitherSkeletonGate());
+        gateList.add(new SkeletonGate());
         gateNum = 0;
     }
 
@@ -52,7 +52,7 @@ public class GateManager
         Location mainLoc = new Location(plugin.getServer().getWorld("world"), _mainVec.getX(), _mainVec.getY(), _mainVec.getZ());
         gateNum++;
         gateList.get(_gate).Init(mainLoc);
-        gateList.get(_gate).initialSpawn();
+        gateList.get(_gate).spawnRoutine();
         gateList.get(_gate).spawnBoss();
         gateList.get(_gate).gateOverload();
     }

@@ -25,6 +25,10 @@ public class CheckAllGateCommand implements CommandExecutor
         for(int i = 0; i < gateList.size(); i++)
         {
             Gate targetGate = gateList.get(i);
+            if(!targetGate.getOnGate())
+            {
+                continue;
+            }
             Vector gateMainVec = targetGate.getGateMainLoc().toVector();
             Vector gateDimensionVec = targetGate.getGateDimensionLoc().toVector();
             int lv = targetGate.getGateLevel();

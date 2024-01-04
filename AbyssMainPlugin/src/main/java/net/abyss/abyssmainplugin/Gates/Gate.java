@@ -29,10 +29,10 @@ public abstract class Gate
     protected List<Material> gatePrevBlockList = new ArrayList<>();
     protected int gateIndex;
     protected HashMap<String, List<Location>> monsterMap = new HashMap<>();
-    protected List<ActiveMob> mobList = new ArrayList<>();
+    protected List<String> UUIDList = new ArrayList<>();
+    protected int currMonsterNum = 0;
     protected List<Player> gateInPlayerList = new ArrayList<>();
     protected int maxMonsterNum;
-    protected int currMonsterNum = 0;
     protected long spawnDelay = 0;
     protected long gateOverloadTime = 0;
     protected boolean isOverload = false;
@@ -105,9 +105,10 @@ public abstract class Gate
             outAllPlayer();
             GameManager.getInstance().changeWorldLevel();
 
-            for(ActiveMob mob : mobList)
+            for(String uuid : UUIDList)
             {
-                Monster monster = MonsterManager.getInstance().getMonster(mob);
+                ActiveMob mob = MythicBukkit.inst().getMobManager().getActiveMob(UUID.fromString(uuid)).orElse(null);
+                Monster monster = MonsterManager.getInstance().getMonster(mob.getEntity());
                 double changedHealth = (mob.getEntity().getMaxHealth() * 1.5) - mob.getEntity().getMaxHealth();
                 mob.getEntity().setMaxHealth(mob.getEntity().getMaxHealth() * 1.5);
                 mob.getEntity().setHealth(mob.getEntity().getHealth() + changedHealth);
@@ -116,7 +117,7 @@ public abstract class Gate
             }
 
             spawnTask.cancel();
-            mobList.clear();
+            UUIDList.clear();
             GateManager.getInstance().deleteGate(this);
             isOverload = true;
 
@@ -133,44 +134,12 @@ public abstract class Gate
         }, 20 * gateOverloadTime);
     }
 
-    public void initialSpawn()
-    {
-        currMonsterNum = 0;
-        for(String monsterType : monsterMap.keySet())
-        {
-            if(currMonsterNum >= maxMonsterNum)
-            {
-                break;
-            }
-            for(Location spawnLoc : monsterMap.get(monsterType))
-            {
-                if(currMonsterNum >= maxMonsterNum)
-                {
-                    break;
-                }
-                MythicMob mythicMob = MythicBukkit.inst().getMobManager().getMythicMob(monsterType).orElse(null);
-
-                if(mythicMob != null)
-                {
-                    ActiveMob newMob = mythicMob.spawn(BukkitAdapter.adapt(spawnLoc), gateLv);
-
-                    Monster newMonster = MonsterManager.getInstance().getMonster(newMob);
-                    newMonster.Spawn(GateManager.getInstance().getPlugin(), this, newMob);
-
-                    mobList.add(newMob);
-                    currMonsterNum++;
-                }
-            }
-        }
-
-        spawnRoutine();
-    }
-
     public void spawnRoutine()
     {
+        currMonsterNum = 0;
         spawnTask = scheduler.runTaskTimer(GateManager.getInstance().getPlugin(), () ->
         {
-            if(currMonsterNum <= maxMonsterNum)
+            while(currMonsterNum < maxMonsterNum)
             {
                 for(String monsterType : monsterMap.keySet())
                 {
@@ -190,10 +159,10 @@ public abstract class Gate
                         {
                             ActiveMob newMob = mythicMob.spawn(BukkitAdapter.adapt(spawnLoc), gateLv);
 
-                            Monster newMonster = MonsterManager.getInstance().getMonster(newMob);
+                            Monster newMonster = MonsterManager.getInstance().getMonster(newMob.getEntity());
                             newMonster.Spawn(GateManager.getInstance().getPlugin(), this, newMob);
 
-                            mobList.add(newMob);
+                            UUIDList.add(newMob.getUniqueId().toString());
                             currMonsterNum++;
                         }
                     }
@@ -223,13 +192,12 @@ public abstract class Gate
     {
         if(mob.equals(bossMob) && !isOverload)
         {
-            Bukkit.getConsoleSender().sendMessage("보스잡음");
             clearGate();
         }
-        else if(mobList.contains(mob) && !isOverload)
+        else if(UUIDList.contains(mob.getUniqueId().toString()) && !isOverload)
         {
+            UUIDList.remove(mob.getUniqueId().toString());
             currMonsterNum--;
-            mobList.remove(mob);
         }
     }
     public void clearGate()
@@ -237,24 +205,29 @@ public abstract class Gate
         for(Player player : gateInPlayerList)
         {
             TextComponent titleMessage = Component.text().color(TextColor.color(255, 170, 93)).content("게이트 클리어").build();
-            TextComponent subTitleMessage = (TextComponent) getGateName();
+            TextComponent subTitleMessage = Component.text().color(TextColor.color(255, 241, 217)).content("1분뒤 게이트에서 방출됩니다.").build();
             TitleManager.getInstance().printTitleToPlayer(titleMessage, subTitleMessage, player);
         }
         // 기여도에 따라 보상
         spawnTask.cancel();
         overloadTask.cancel();
-        GateManager.getInstance().clearGate();
-        GameManager.getInstance().changeWorldLevel();
-        outAllPlayer();
-        closePortal();
+
+        scheduler.runTaskLater(GateManager.getInstance().getPlugin(), () ->
+        {
+            GateManager.getInstance().clearGate();
+            GameManager.getInstance().changeWorldLevel();
+            outAllPlayer();
+            closePortal();
+        }, 20 * 60);
     }
     public void destroyGate()
     {
         bossMob.remove();
         spawnTask.cancel();
         overloadTask.cancel();
-        for (ActiveMob mob : mobList)
+        for (String uuid : UUIDList)
         {
+            ActiveMob mob = MythicBukkit.inst().getMobManager().getActiveMob(UUID.fromString(uuid)).orElse(null);
             mob.remove();
         }
         outAllPlayer();
@@ -266,6 +239,18 @@ public abstract class Gate
         for(Player player : gateInPlayerList)
         {
             player.teleport(gateMainLoc);
+        }
+    }
+    public boolean playerDeath(Player player)
+    {
+        if(gateInPlayerList.contains(player))
+        {
+            gateInPlayerList.remove(player);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

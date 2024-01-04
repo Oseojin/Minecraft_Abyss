@@ -7,6 +7,7 @@ import net.abyss.abyssmainplugin.Manager.TitleManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,6 +35,7 @@ public class GameStartEvent implements Listener
                 PlayerManager.getInstance().getPlayerData(event.getPlayer()).setIsLobby(false);
                 // 플레이어 텔레포트
                 event.getPlayer().teleport(CentralTower.getInstance().getCenterLoc());
+                Bukkit.getConsoleSender().sendMessage("이동!");
             }
         }
         else if(event.getClickedBlock().getType() == Material.CRYING_OBSIDIAN)

@@ -1,6 +1,8 @@
 package net.abyss.abyssmainplugin.Event;
 
 import dev.lone.itemsadder.api.CustomStack;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.abyss.abyssmainplugin.Manager.MonsterManager;
 import net.abyss.abyssmainplugin.Manager.PlayerManager;
@@ -97,7 +99,6 @@ public class EntityDamageEvent implements Listener
     private void rapidAttack(LivingEntity entity, double damage, int rapidStat, Player player)
     {
         int cnt;
-        boolean isMax = false;
 
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
@@ -106,7 +107,6 @@ public class EntityDamageEvent implements Listener
         if(rapidStat == 100)
         {
             cnt = 2;
-            isMax = true;
         }
         else if(rapidStat > 0)
         {

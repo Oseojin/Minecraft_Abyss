@@ -1,7 +1,6 @@
 package net.abyss.abyssmainplugin.Command;
 
-import net.abyss.abyssmainplugin.Gates.WitherSkeletonGate;
-import net.abyss.abyssmainplugin.Gates.ZombieGate;
+import net.abyss.abyssmainplugin.Gates.SkeletonGate;
 import net.abyss.abyssmainplugin.Manager.GateManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -22,7 +21,7 @@ public class GenerateGateCommand implements CommandExecutor
             commandSender.sendMessage("/generateGate0 [메인좌표 x] [메인좌표 y] [메인좌표 z] [차원좌표 x] [차원좌표 y] [차원좌표 z] [레벨] [최대마릿수]0 [스폰간격] [과부하시간]");
             return false;
         }
-        WitherSkeletonGate newGate = new WitherSkeletonGate();
+        SkeletonGate newGate = new SkeletonGate();
         String gateName = strings[0];
         Vector gateMainVec = new Vector(Double.parseDouble(strings[1]), Double.parseDouble(strings[2]) ,Double.parseDouble(strings[3]));
         Vector gateDimensionVec = new Vector(Double.parseDouble(strings[4]), Double.parseDouble(strings[5]), Double.parseDouble(strings[6]));

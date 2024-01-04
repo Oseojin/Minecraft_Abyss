@@ -16,3 +16,5 @@ commands:
     description: 스텟창 열기
   setStat:
     description: 스텟 설정(테스트용)
+  getPos:
+    description: 상대적 위치 계산

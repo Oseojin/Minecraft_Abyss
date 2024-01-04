@@ -1,17 +1,19 @@
 package net.abyss.abyssmainplugin.Manager;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import net.abyss.abyssmainplugin.AbyssMainPlugin;
 import net.abyss.abyssmainplugin.Monsters.Monster;
 import net.abyss.abyssmainplugin.Monsters.MonsterTypeSkeleton;
 import net.abyss.abyssmainplugin.Monsters.MonsterTypeWitherSkeleton;
 import net.abyss.abyssmainplugin.Monsters.MonsterTypeZombie;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class MonsterManager
 {
@@ -41,9 +43,9 @@ public class MonsterManager
 
 
 
-    private final HashMap<MythicMob, Monster> monsterHashMap = new HashMap<>();
+    private final HashMap<String, Monster> monsterHashMap = new HashMap<>();
     private final HashMap<Entity, Monster> monsterEntityHashMap = new HashMap<>();
-    private final HashMap<MythicMob, Monster> bossHashMap = new HashMap<>();
+    private final HashMap<String, Monster> bossHashMap = new HashMap<>();
     private final HashMap<Entity, Monster> bossEntityHashMap = new HashMap<>();
 
     public Monster findMonsterType(EntityType type)
@@ -62,16 +64,18 @@ public class MonsterManager
     }
     public void addMonster(ActiveMob _mob, Monster _monster)
     {
-        monsterHashMap.put(_mob.getType(), _monster);
+        monsterHashMap.put(_mob.getUniqueId().toString(), _monster);
         monsterEntityHashMap.put(_mob.getEntity().getBukkitEntity(), _monster);
     }
-    public Monster getMonster(ActiveMob _mob)
+    public Monster getMonster(AbstractEntity _mob)
     {
-        if(!monsterHashMap.containsKey(_mob.getType()))
+        ActiveMob activeMob = new ActiveMob(_mob);
+
+        if(!monsterHashMap.containsKey(activeMob.getUniqueId().toString()))
         {
             return null;
         }
-        return monsterHashMap.get(_mob.getType());
+        return monsterHashMap.get(activeMob.getUniqueId().toString());
     }
     public Monster getMonsterByEntity(Entity _mob)
     {
@@ -83,18 +87,16 @@ public class MonsterManager
     }
     public void addBoss(ActiveMob _mob, Monster _bossMonster)
     {
-        Bukkit.getConsoleSender().sendMessage(_mob + "");
-        bossHashMap.put(_mob.getType(), _bossMonster);
+        bossHashMap.put(_mob.getUniqueId().toString(), _bossMonster);
         bossEntityHashMap.put(_mob.getEntity().getBukkitEntity(), _bossMonster);
     }
     public Monster getBoss(ActiveMob _mob)
     {
-        Bukkit.getConsoleSender().sendMessage(_mob + " " + bossHashMap.containsKey(_mob.getType()));
-        if(!bossHashMap.containsKey(_mob.getType()))
+        if(!bossHashMap.containsKey(_mob.getUniqueId().toString()))
         {
             return null;
         }
-        return bossHashMap.get(_mob.getType());
+        return bossHashMap.get(_mob.getUniqueId().toString());
     }
     public Monster getBossByEntity(Entity _mob)
     {
@@ -104,17 +106,15 @@ public class MonsterManager
         }
         return bossEntityHashMap.get(_mob);
     }
-    public void monsterDead(ActiveMob _mob)
+    public void monsterDead(String uuid)
     {
-        if(monsterHashMap.containsKey(_mob.getType()))
+        if(monsterHashMap.containsKey(uuid))
         {
-            Bukkit.getConsoleSender().sendMessage("몹 사망 몬스터 매니저");
-            monsterHashMap.get(_mob.getType()).Dead();
+            monsterHashMap.get(uuid).Dead();
         }
-        else if(bossHashMap.containsKey(_mob.getType()))
+        else if(bossHashMap.containsKey(uuid))
         {
-            Bukkit.getConsoleSender().sendMessage("보스 사망 몬스터 매니저");
-            bossHashMap.get(_mob.getType()).Dead();
+            bossHashMap.get(uuid).Dead();
         }
     }
 }
